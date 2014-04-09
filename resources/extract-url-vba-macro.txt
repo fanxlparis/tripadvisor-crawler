@@ -1,0 +1,4 @@
+Public Function GetURL(c As Range) As String
+  On Error Resume Next
+  GetURL = c.Hyperlinks(1).Address
+End Function
