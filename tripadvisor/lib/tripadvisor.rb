@@ -1,6 +1,5 @@
-require "tripadvisor/version"
-require "tripadvisor/models"
-
 module Tripadvisor
-  # Your code goes here...
+  require "tripadvisor/version"
+  require "tripadvisor/constant"
+  require "tripadvisor/models"
 end
