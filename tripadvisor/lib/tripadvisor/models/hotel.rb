@@ -63,9 +63,20 @@ module Tripadvisor
         array.map{|type| type.to_s.gsub(/^v\:/, "")}.map{|type| type.to_sym}
       end
 
+      ## 客室数を抽出
+      def extract_num_rooms 
+        num_rooms = nil
+        @content.css("div.tabs_num_rooms").each do |div|
+          num_rooms = div.content.to_i if div.content =~ /^[0-9]+$/
+        end
+        num_rooms
+      end
+
       ## 価格帯を抽出
       def extract_price_range
-        get_price_range.content.to_s.gsub(/\n/, "")
+        (get_price_range.nil?) ?
+          nil :
+          get_price_range.content.to_s.gsub(/\n/, "")
       end
 
       ## 価格帯を取得
@@ -73,12 +84,14 @@ module Tripadvisor
         price_range_element = nil
         div_class = "div.additional_info"
         @content.css(div_class).each do |div|
-          price_range_element = div.css("span").select do |elm|
-            elm.has_attribute?("property") &&
-                elm.get_attribute("property") == "v:pricerange"
+          div.css("span").each do |elm|
+            if elm.has_attribute?("property") &&
+                  elm.get_attribute("property") == "v:pricerange"
+              price_range_element = elm
+            end
           end
         end
-        price_range_element.first
+        price_range_element
       end
 
     end

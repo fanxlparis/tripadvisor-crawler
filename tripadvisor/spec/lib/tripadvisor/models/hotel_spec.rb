@@ -5,7 +5,8 @@ describe Tripadvisor::Models::Hotel do
 
   before(:all) do
     name = "Business Hotel Emblem"
-    uri = "http://www.tripadvisor.com/Hotel_Review-g1021286-d1045374-Reviews-Business_Hotel_Emblem-Yamato_Kanagawa_Prefecture_Kanto.html"
+    #uri = "http://www.tripadvisor.com/Hotel_Review-g1021286-d1045374-Reviews-Business_Hotel_Emblem-Yamato_Kanagawa_Prefecture_Kanto.html"
+    uri = "http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html"
 
     @obj = Tripadvisor::Models::Hotel.new(name, uri)
     @obj.fetch_content
@@ -22,20 +23,20 @@ describe Tripadvisor::Models::Hotel do
       result = @obj.extract_address
       result.class.to_s.should == "Hash"
       result.should == {
-          :"street-address" => {:order => 0, :value => "1-6-3 Minamirinkan"},
-          :locality         => {:order => 1, :value => "Yamato"},
-          :region           => {:order => 2, :value => "Kanagawa Prefecture"},
-          :"postal-code"    => {:order => 3, :value => "242-0006"},
+          :"street-address" => {:order => 0, :value => "1-1-1 Uchisaiwaicho"},
+          :locality         => {:order => 1, :value => "Chiyoda"},
+          :region           => {:order => 2, :value => "Tokyo Prefecture"},
+          :"postal-code"    => {:order => 3, :value => "100-8558"},
           :"country-name"   => {:order => 4, :value => "Japan"}
-        }
+        } 
     end
   end
 
   it "get_span_format_address" do
     result = @obj.get_span_format_address
     result.class.to_s.should === "Nokogiri::XML::Element"
-    result.to_s.should == "<span class=\"format_address\"><span class=\"street-address\" property=\"v:street-address\">1-6-3 Minamirinkan</span>, <span class=\"locality\"><span property=\"v:locality\">Yamato</span>, <span property=\"v:region\">Kanagawa Prefecture</span> <span property=\"v:postal-code\">242-0006</span></span>, <span class=\"country-name\" property=\"v:country-name\">Japan</span> </span>"
-    result.content.should == "1-6-3 Minamirinkan, Yamato, Kanagawa Prefecture 242-0006, Japan "
+    result.to_s.should == "<span class=\"format_address\"><span class=\"street-address\" property=\"v:street-address\">1-1-1 Uchisaiwaicho</span>, <span class=\"locality\"><span property=\"v:locality\">Chiyoda</span>, <span property=\"v:region\">Tokyo Prefecture</span> <span property=\"v:postal-code\">100-8558</span></span>, <span class=\"country-name\" property=\"v:country-name\">Japan</span> </span>"
+    result.content.should == "1-1-1 Uchisaiwaicho, Chiyoda, Tokyo Prefecture 100-8558, Japan "
   end
 
   describe "get_address_elements" do
@@ -47,8 +48,8 @@ describe Tripadvisor::Models::Hotel do
 
       contents = result.map {|node| node.content}
       contents.should == [
-          "1-6-3 Minamirinkan" , "Yamato" , "Kanagawa Prefecture" , 
-          "242-0006"           , "Japan"
+          "1-1-1 Uchisaiwaicho", "Chiyoda", "Tokyo Prefecture",
+          "100-8558", "Japan"
         ]
     end
   end
@@ -66,7 +67,14 @@ describe Tripadvisor::Models::Hotel do
   describe "extract_price_range" do
     it "can extract the price range" do
       result = @obj.extract_price_range
-      result.should == "$"
+      result.should == "$$$$"
+    end
+  end
+
+  describe "extract_num_rooms" do
+    it "can extract the number of rooms" do
+      result = @obj.extract_num_rooms
+      result.should == 931
     end
   end
 
