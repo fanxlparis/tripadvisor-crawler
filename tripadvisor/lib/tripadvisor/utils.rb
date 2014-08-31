@@ -16,7 +16,7 @@ module Tripadvisor
     end
 
     def full_uri(uri, lang = DEFAULT_LANG)
-      (uri =~ /^http/) ?  uri : base_uri(lang) + uri 
+      (uri =~ /^http/) ?  uri : base_uri(lang) + uri.gsub(/^(\/|\s*)/, "")
     end
 
   end
