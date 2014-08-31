@@ -123,7 +123,7 @@ module Tripadvisor
           ]
         values << (@num_rooms.nil?) ? "NA" : @num_rooms
         values << (@price_range.nil?) ? "NA" : @price_range
-        values.join(",")
+        values.to_csv.gsub!(/(\r|\n)/, "")
       end
 
       ## convert the address hash into a joined string
