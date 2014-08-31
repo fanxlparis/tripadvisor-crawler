@@ -14,24 +14,34 @@ module Tripadvisor
 
       attr_reader :sub_locations, :hotels
 
-      def initialize(*args)
-        super(*args)
+      @@hashs = Array.new
+
+      def initialize(name, uri)
+        super(name, uri)
         @sub_locations = Array.new
         @hotels = Array.new
+        add_hash(uri)
       end
 
       def fetch_sub_pages(doc)
         doc.css("div#BODYCON").css("a").each do |element|
+          next if element.nil? || element.attribute("href").nil?
           href_value = element.attribute("href").value
           # sub location page
           if href_value =~ /^\/(AllLocations|Hotels)/
             begin
-              sub_location = factory(element)
-              sub_location.parent_page = self
-              @sub_locations << sub_location
-              log.info("add #{sub_location.uri} as a sub_location at #{@uri}")
-            rescue
-              log.error("parsing error: #{element} at #{uri}")
+              name = element.children[0].content.to_s
+              uri = full_uri(element.attribute("href").value.to_s)
+              log.info("add a sub_location: #{uri} at #{@uri}")
+              unless self.class.is_fetched(uri)
+                sub_location = factory(element)
+                sub_location.parent_page = self
+                @sub_locations << sub_location
+              else
+                log.warn("#{name}: #{uri} is already fetched ")
+              end
+            rescue => e
+              log.error("parsing error: #{element} at #{uri} #{e.message}")
             end
           end
 
@@ -40,16 +50,17 @@ module Tripadvisor
             begin
               name = element.children[0].content.to_s
               uri = full_uri(element.attribute("href").value.to_s)
+              uri.gsub!(/#[A-Z]+$/, "")
+              log.info("add a hotel: #{uri} at #{@uri}")
               unless Tripadvisor::Models::Hotel.is_fetched(uri)
                 hotel = Tripadvisor::Models::Hotel.new(name, uri)
                 hotel.parent_page = self
                 @hotels << hotel
-                log.info("add #{hotel.uri} as a hotel at #{@uri}")
               else
                 log.warn("#{name}: #{uri} is already fetched")
               end
-            rescue
-              log.error("parsing error: #{element} at #{uri}")
+            rescue => e
+              log.error("parsing error: #{element} at #{uri} #{e.message}")
             end
           end
         end
@@ -59,6 +70,16 @@ module Tripadvisor
         name = element.children[0].content
         uri = full_uri(element.attribute("href").value)
         Tripadvisor::Models::AllLocations.new(name, uri)
+      end
+
+      def add_hash(uri)
+        hash = (uri =~ /^http/) ? Digest::MD5.hexdigest(uri) : uri
+        @@hashs << hash
+      end
+
+      def self.is_fetched(uri)
+        hash = (uri =~ /^http/) ? Digest::MD5.hexdigest(uri) : uri
+        @@hashs.include?(hash)
       end
 
     end

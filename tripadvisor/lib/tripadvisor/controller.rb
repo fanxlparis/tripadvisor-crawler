@@ -1,0 +1,1 @@
+require "tripadvisor/controller/crowler"

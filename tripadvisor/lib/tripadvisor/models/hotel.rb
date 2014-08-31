@@ -121,8 +121,8 @@ module Tripadvisor
             @address[:region][:value],
             address2string
           ]
-        values << (@num_rooms.nil?) ? "NA" : @num_rooms
-        values << (@price_range.nil?) ? "NA" : @price_range
+        values << @num_rooms
+        values << @price_range
         values << @uri
         values.to_csv.gsub!(/(\r|\n)/, "") 
       end
