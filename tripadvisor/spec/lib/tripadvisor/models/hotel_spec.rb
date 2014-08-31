@@ -77,4 +77,11 @@ describe Tripadvisor::Models::Hotel do
     end
   end
 
+  describe "to_json" do
+    it "should be expected" do
+      result = @obj.to_json
+      result.should == "{\"uri\":\"http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html\",\"address\":{\"street-address\":{\"order\":0,\"value\":\"1-1-1 Uchisaiwaicho\"},\"locality\":{\"order\":1,\"value\":\"Chiyoda\"},\"region\":{\"order\":2,\"value\":\"Tokyo Prefecture\"},\"postal-code\":{\"order\":3,\"value\":\"100-8558\"},\"country-name\":{\"order\":4,\"value\":\"Japan\"}},\"num_rooms\":931,\"price_range\":\"$$$$\"}"
+    end
+  end
+
 end

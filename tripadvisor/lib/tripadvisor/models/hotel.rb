@@ -1,4 +1,5 @@
 require "rubygems"
+require 'json'
 require 'pp'
 
 require 'tripadvisor/utils'
@@ -95,6 +96,14 @@ module Tripadvisor
           end
         end
         price_range_element
+      end
+
+      ## convert into JSON
+      def to_json
+        hash = {:uri => @uri, :address => @address}
+        hash[:num_rooms] = @num_rooms unless @num_rooms.nil?
+        hash[:price_range] = @price_range unless @price_range.nil?
+        hash.to_json
       end
 
     end
