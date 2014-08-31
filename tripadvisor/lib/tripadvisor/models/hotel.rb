@@ -11,11 +11,14 @@ module Tripadvisor
       include Tripadvisor::Utils
       include TripAdvisor::Models::Page
 
-      attr_reader :content
-      attr_reader :address
+      attr_reader :content, :address, :price_range, :num_rooms
 
       def initialize(name, uri)
         super(name, uri)
+        fetch_content
+        @address     = extract_address
+        @price_range = extract_price_range
+        @num_rooms   = extract_num_rooms
       end
 
       def factory(element)
@@ -25,7 +28,7 @@ module Tripadvisor
       end
 
       def fetch_content
-        @content = get_document(@uri)
+        @content = get_document(@uri) if @content.nil?
       end
 
       def extract_address

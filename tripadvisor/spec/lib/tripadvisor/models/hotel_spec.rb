@@ -9,7 +9,6 @@ describe Tripadvisor::Models::Hotel do
     uri = "http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html"
 
     @obj = Tripadvisor::Models::Hotel.new(name, uri)
-    @obj.fetch_content
   end
 
   describe "fetch_content" do
