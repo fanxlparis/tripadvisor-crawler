@@ -80,7 +80,21 @@ describe Tripadvisor::Models::Hotel do
   describe "to_json" do
     it "should be expected" do
       result = @obj.to_json
-      result.should == "{\"uri\":\"http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html\",\"address\":{\"street-address\":{\"order\":0,\"value\":\"1-1-1 Uchisaiwaicho\"},\"locality\":{\"order\":1,\"value\":\"Chiyoda\"},\"region\":{\"order\":2,\"value\":\"Tokyo Prefecture\"},\"postal-code\":{\"order\":3,\"value\":\"100-8558\"},\"country-name\":{\"order\":4,\"value\":\"Japan\"}},\"num_rooms\":931,\"price_range\":\"$$$$\"}"
+      result.should == "{\"uri\":\"http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html\",\"postal_code\":\"100-8558\",\"region\":\"Tokyo Prefecture\",\"address\":\"1-1-1 Uchisaiwaicho Chiyoda\",\"num_rooms\":931,\"price_range\":\"$$$$\"}"
+    end
+  end
+
+  describe "to_csv" do
+    it "should be expected" do
+      result = @obj.to_csv
+      result.should == "http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html,100-8558,Tokyo Prefecture,1-1-1 Uchisaiwaicho Chiyoda,false,false"
+    end
+  end
+
+  describe "address2string" do
+    it "should be expected" do
+      result = @obj.address2string
+      result.should == "1-1-1 Uchisaiwaicho Chiyoda"
     end
   end
 
