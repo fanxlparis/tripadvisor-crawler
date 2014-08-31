@@ -1,5 +1,5 @@
 module Tripadvisor
   require "tripadvisor/version"
-  require "tripadvisor/constant"
+  require "tripadvisor/utils"
   require "tripadvisor/models"
 end
