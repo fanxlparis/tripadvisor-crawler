@@ -6,9 +6,10 @@ describe Tripadvisor::Models::Hotel do
   before(:all) do
     name = "Business Hotel Emblem"
     #uri = "http://www.tripadvisor.com/Hotel_Review-g1021286-d1045374-Reviews-Business_Hotel_Emblem-Yamato_Kanagawa_Prefecture_Kanto.html"
-    uri = "http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html"
+    @uri = "http://www.tripadvisor.com/Hotel_Review-g1066443-d302435-Reviews-Imperial_Hotel_Tokyo-Chiyoda_Tokyo_Tokyo_Prefecture_Kanto.html"
 
-    @obj = Tripadvisor::Models::Hotel.new(name, uri)
+    @obj = Tripadvisor::Models::Hotel.new(name, @uri)
+    @obj.fetch_content
   end
 
   describe "fetch_content" do
@@ -95,6 +96,16 @@ describe Tripadvisor::Models::Hotel do
     it "should be expected" do
       result = @obj.address2string
       result.should == "1-1-1 Uchisaiwaicho Chiyoda"
+    end
+  end
+
+  describe "is_fetched" do
+    it "should be true" do
+      Tripadvisor::Models::Hotel.is_fetched(@uri).should == true
+    end
+
+    it "should be false" do
+      Tripadvisor::Models::Hotel.is_fetched("http://no.such.uri/").should == false
     end
   end
 

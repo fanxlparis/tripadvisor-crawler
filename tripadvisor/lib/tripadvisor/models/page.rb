@@ -3,11 +3,17 @@ require "rubygems"
 require 'nokogiri'
 require 'open-uri'
 
+require 'tripadvisor/logging'
+
 module TripAdvisor
   module Models
     module Page
+      include Tripadvisor::Logging
 
       BASE_URI = 'http://www.tripadvisor.com/'
+
+      attr_accessor :parent_page
+      attr_reader :name, :uri
 
       def initialize(name, uri) 
         @name = name

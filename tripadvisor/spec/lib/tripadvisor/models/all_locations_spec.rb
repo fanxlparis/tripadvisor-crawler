@@ -17,7 +17,7 @@ describe "Tripadvisor::Models::AllLocations" do
     end
   end
 
-  describe "fetch_sub_locations" do
+  describe "fetch_sub_pages" do
     it "# of sub-locations should be greater than 0" do
       doc = @obj.get_document
       @obj.fetch_sub_pages(doc)

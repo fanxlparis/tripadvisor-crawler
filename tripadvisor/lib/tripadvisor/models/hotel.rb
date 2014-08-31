@@ -1,6 +1,7 @@
 require "rubygems"
 require 'json'
 require 'pp'
+require 'digest/md5'
 
 require 'tripadvisor/utils'
 require 'tripadvisor/models/page'
@@ -14,12 +15,11 @@ module Tripadvisor
 
       attr_reader :content, :address, :price_range, :num_rooms
 
+      @@hashs = Array.new
+
       def initialize(name, uri)
         super(name, uri)
-        fetch_content
-        @address     = extract_address
-        @price_range = extract_price_range
-        @num_rooms   = extract_num_rooms
+        add_hash(uri)
       end
 
       def factory(element)
@@ -30,6 +30,9 @@ module Tripadvisor
 
       def fetch_content
         @content = get_document(@uri) if @content.nil?
+        @address     = extract_address
+        @price_range = extract_price_range
+        @num_rooms   = extract_num_rooms
       end
 
       def extract_address
@@ -131,6 +134,16 @@ module Tripadvisor
           .sort{|(k1,v1), (k2,v2)| 
             v1[:order] <=> v2[:order]
           }.map {|array| array[1][:value]}.join(" ")
+      end
+
+      def add_hash(uri)
+        hash = (uri =~ /^http/) ? Digest::MD5.hexdigest(uri) : uri
+        @@hashs << hash
+      end
+
+      def self.is_fetched(uri)
+        hash = (uri =~ /^http/) ? Digest::MD5.hexdigest(uri) : uri
+        @@hashs.include?(hash)
       end
 
     end
