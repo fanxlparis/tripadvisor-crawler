@@ -103,7 +103,7 @@ module Tripadvisor
 
       ## convert into JSON
       def to_json
-        hash = {:uri => @uri}
+        hash = {:name => @name, :uri => @uri}
         hash[:postal_code] = @address[:"postal-code"][:value]
         hash[:region]      = @address[:region][:value]
         hash[:address]     = address2string
@@ -116,14 +116,15 @@ module Tripadvisor
       ## uri, postal_code, region, address, num_rooms, price_range
       def to_csv
         values = [
-            @uri,
+            @name,
             @address[:"postal-code"][:value],
             @address[:region][:value],
             address2string
           ]
         values << (@num_rooms.nil?) ? "NA" : @num_rooms
         values << (@price_range.nil?) ? "NA" : @price_range
-        values.to_csv.gsub!(/(\r|\n)/, "")
+        values << @uri
+        values.to_csv.gsub!(/(\r|\n)/, "") 
       end
 
       ## convert the address hash into a joined string
