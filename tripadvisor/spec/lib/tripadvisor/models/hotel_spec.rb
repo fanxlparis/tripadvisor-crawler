@@ -63,4 +63,11 @@ describe Tripadvisor::Models::Hotel do
     end
   end
 
+  describe "extract_price_range" do
+    it "can extract the price range" do
+      result = @obj.extract_price_range
+      result.should == "$"
+    end
+  end
+
 end
