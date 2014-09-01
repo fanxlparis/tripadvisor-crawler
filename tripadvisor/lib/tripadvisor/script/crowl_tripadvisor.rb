@@ -8,12 +8,14 @@ require 'tripadvisor/controller/crowler'
 module Tripadvisor
   module Script
     class CrowlTripadvisor < Thor
+      default_command :execute
 
       desc 'execute [options]', 'run crowler'
       method_option :input,
         :aliases  => '-o',
         :type     => :string,
-        :desc     => 'input a csv file path'
+        :desc     => 'input a csv file path',
+        :required => true
       method_option :outpath,
         :aliases  => '-o',
         :type     => :string,

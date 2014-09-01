@@ -24,11 +24,16 @@ module Tripadvisor
       end
 
       def fetch_sub_pages(doc)
-        doc.css("div#BODYCON").css("a").each do |element|
+        fetch_sub_locations(doc)
+        fetch_sub_hotels(doc) if @sub_locations.length == 0
+      end
+
+      def fetch_sub_locations(doc)
+        doc.css("div#BODYCON").css("table").css("a").each do |element|
           next if element.nil? || element.attribute("href").nil?
           href_value = element.attribute("href").value
           # sub location page
-          if href_value =~ /^\/(AllLocations|Hotels)/
+          if href_value =~ /^\/(AllLocations|Hotels)/ && href_value !~ /\-Restaurants\-/
             begin
               name = element.children[0].content.to_s
               uri = full_uri(element.attribute("href").value.to_s)
@@ -44,7 +49,13 @@ module Tripadvisor
               log.error("parsing error: #{element} at #{uri} #{e.message}")
             end
           end
+        end
+      end
 
+      def fetch_sub_hotels(doc)
+        doc.css("div#BODYCON").css("table").css("a").each do |element|
+          next if element.nil? || element.attribute("href").nil?
+          href_value = element.attribute("href").value
           # hotel page
           if href_value =~ /^\/Hotel_Review/
             begin
